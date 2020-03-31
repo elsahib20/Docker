@@ -1,0 +1,46 @@
+Command to pull and run MySQL server 5 :
+docker run -d -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=root mysql:5
+** --name : is a the tag for our container
+** -d : to prevent the terminal from hanging
+** -e : is for environmental variables ( var name = var value )
+
+Connect to the Database server using the following command:
+docker exec -it mysql bash
+** -it : to have an interactive shell inside the container
+
+After you connect to bash run the following command:
+mysql -uroot -proot
+
+Now you can execute SQL commands or instructions :)
+
+Next let’s create the application container:
+Create Dockerfile containing the following
+
+FROM python:3.5
+RUN apt update
+Run apt install -y python3
+RUN apt install -y python3-pip
+COPY . .
+RUN pip3 install -r requirements.txt
+ENV SECRET_KEY = ${SECRET_KEY}
+ENV DATABASE_URI = ${DATABASE_URI}
+EXPOSE 5000
+ENTRYPOINT ["/usr/local/bin/python", "app.py"]
+
+Then Run the command
+docker build -t devops .
+
+Create a network and add both containers to it like this
+
+Docker network create [network-name]
+Docker network connect [network-name] [app-container-name]
+Docker network connect [network-name] [mysql-container-name]
+
+Run docker inspect [mysql_container_name] on the mysql container to obtain the IP Address
+
+Now Export your Secret key and database uri as session local variables and pass them to docker run command, so the command should be as follows 
+
+docker run -d -p 5000:5000 -e SECRET_KEY -e DATABASE_URI --name devops devops
+** these will be hard coded to the container you are running now
+** to change these variables you will need to export your NEW variables then run this command again after you delete the container built from the previous command or you will have to assign a new tag to each new container
+
