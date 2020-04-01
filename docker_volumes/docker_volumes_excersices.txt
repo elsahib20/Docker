@@ -1,0 +1,9 @@
+1. docker volume create jenkins
+2. docker run -d -p 8080:8080 --name jenkins --volume jenkins:/var/jenkins_home jenkins
+3. docker exec -it jenkins bash ( to get admin pass )
+4. logged into Jenkins web interface, configured it added a user and a job
+5. docker stop jenkins
+6. docker rm jenkins
+7. docker run -d -p 8080:8080 --name jenkins --volume jenkins:/var/jenkins_home jenkins ( new container )
+8. went to jenkins web interface and everything was there :)
+
