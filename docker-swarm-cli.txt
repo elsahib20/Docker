@@ -1,0 +1,16 @@
+docker service create --name python-http-server bobcrutchley/python-http-server:latest
+
+docker service update --publish-add 80:9000 --replicas 10 python-http-server
+
+docker service update --replicas 2 python-http-server
+
+docker node update --availability drain docker-int
+
+docker node update --availability drain blog-server
+
+docker node rm docker-int
+
+docker node rm blog-server
+
+
+docker service create --name jenkins --publish 8080:8080 --mount type=bind,source=$(pwd)/jobs,target=/var/jenkins_home/jobs jenkins:latest
